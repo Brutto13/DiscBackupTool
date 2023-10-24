@@ -23,13 +23,18 @@ opt_readedDisc = OptionMenu(window, str_selectedLoadedDisc, *optionsDiscs)
 opt_flushDisc = OptionMenu(window, str_selectFlushDisc, *optionsDiscs)
 
 def main():
-    # change working directory
-    # os.chdir(str_selectedLoadedDisc + ':/')
+    try:
+        # change working directory
+        os.chdir(str_selectFlushDisc.get() + ':/')
 
-    # copy disc
-    shutil.copytree(str_selectedLoadedDisc.get() + ':/', str_selectFlushDisc.get() + ':/', symlinks=False, ignore=None, copy_function=shutil.copy, ignore_dangling_symlinks=False, dirs_exist_ok=False)
-    showinfo("Backup Tool - Done", "Operation: BACKUPPING\nStatus: DONE")
-    return
+        # copy disc
+        src = rf'{str_selectedLoadedDisc.get()}:/'
+        dest = rf'{str_selectFlushDisc.get()}:/'
+        shutil.copytree(src, dest, ignore=None, copy_function=shutil.copy2, ignore_dangling_symlinks=False, dirs_exist_ok=False)
+        showinfo("Backup Tool - Done", "Operation: BACKUPPING\nStatus: DONE")
+        return
+    except PermissionError:
+        showerror("Backup Tool", "Permission error")
 
 btn_copy = Button(text="Backup Disc", command=main)
 
